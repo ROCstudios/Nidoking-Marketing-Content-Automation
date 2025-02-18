@@ -2,8 +2,6 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { igGetToken, tiktokGetToken } from "../util/TokenService";
-import StepsIndicator from "./StepsIndicator";
 import NavBar from "./NavBar";
 import config from "../config";
 import ErrorAlert from "./ErrorAlert";
@@ -51,7 +49,6 @@ const Poster = () => {
           caption: caption,
           post_to_ig: postToIg,
           post_to_tiktok: postToTiktok,
-          tiktok_access_token: tiktokGetToken()
         });
         console.log('🚀 ~ file: Poster.js:34 ~ handleGenerate ~ response:', response.data);
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { tiktokSaveToken, tiktokSaveRefreshToken } from "../util/TokenService";
 import config from "../config";
 import NavBar from "./NavBar";
 
@@ -22,8 +21,6 @@ const CallbackHandler = () => {
             code: code
           });
           if (response.status === 200) {
-            tiktokSaveToken(response.data.access_token);
-            tiktokSaveRefreshToken(response.data.refresh_token);
 
             // Redirect to the dashboard after successful authentication
             navigate("/instaauth");
