@@ -8,3 +8,5 @@ frontend/.env.production
 frontend/node_modules
 frontend/build
 frontend/public/
+backend/app/__pycache__
+backend/app/blueprint/__pycache__

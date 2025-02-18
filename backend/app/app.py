@@ -1,8 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from blueprint.content_route import content_bp
+from blueprint.media_route import media_bp
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 CORS(app)
+
+app.register_blueprint(content_bp)
+app.register_blueprint(media_bp)
 
 
 @app.route("/api/data", methods=["GET"])
