@@ -10,6 +10,10 @@ import ErrorAlert from "./ErrorAlert";
 const ContentTopic = () => {
   const navigate = useNavigate();
 
+  const [blogPost, setBlogPost] = useState(true);
+  const [textPost, setTextPost] = useState(true);
+  const [facelessVideo, setFacelessVideo] = useState(true);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,8 +21,66 @@ const ContentTopic = () => {
 
   useEffect(() => {}, []);
 
+  const showModal = () => {
+    setError(null);
+    document.getElementById("winning_modal").showModal();
+  };
+
   return (
     <div>
+      <dialog id="winning_modal" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">
+            What would you like to generate?
+          </h3>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">SEO Blog Post</span>
+              <input
+                type="checkbox"
+                checked={blogPost}
+                onChange={(e) => setBlogPost(e.target.checked)}
+                className="checkbox"
+              />
+            </label>
+          </div>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">Text Post</span>
+              <input
+                type="checkbox"
+                checked={textPost}
+                onChange={(e) => setTextPost(e.target.checked)}
+                className="checkbox"
+              />
+            </label>
+          </div>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">Faceless Video</span>
+              <input
+                type="checkbox"
+                checked={facelessVideo}
+                onChange={(e) => setFacelessVideo(e.target.checked)}
+                className="checkbox"
+              />
+            </label>
+          </div>
+          <div className="py-4">
+            <button
+              className="btn btn-primary w-full max-w-lg"
+              onClick={showModal}
+            >
+              Let's Go! Generate Content
+            </button>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
       <NavBar index={2} />
       {error && <ErrorAlert message={error} />}
       <div className="hero bg-base-200 min-h-screen">
@@ -42,7 +104,7 @@ const ContentTopic = () => {
             </label>
             <button
               className="btn btn-primary w-full max-w-lg mt-4"
-              onClick={() => (window.location.href = "/bundle")}
+              onClick={showModal}
             >
               Generate Content Bundle
             </button>
