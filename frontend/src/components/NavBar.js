@@ -15,16 +15,15 @@ const NavBar = ({ index }) => {
         <div className="flex-none">
           <StepsIndicator currentStep={index} />
           <ul className="menu menu-horizontal px-1">
-            <li><a href="/">Conversation</a></li>
-            <li><a href="/avatar">Avatar</a></li>
-            <li><a href="/audio">Audio</a></li>
+            <li><a href="/">Brand</a></li>
+            <li><a href="/avatar">Topic</a></li>
+            <li><a href="/audio">Bundle</a></li>
             <li>{index >= 3 ? <a href="/poster">Review</a> : <span className="text-gray-400">Review</span>}</li>
           </ul>
         </div>
       </div>
       <div className="navbar-center">
-        <a className="text-xl p-0">Content Hero</a>
-        <p className="text-sm font-bold pl-1 align-bottom text-gray-400">by Hamo</p>
+        <a className="text-xl p-0">Marketing Hero</a>
       </div>
       <div className="navbar-end">
         <div className="join grid grid-cols-2">
