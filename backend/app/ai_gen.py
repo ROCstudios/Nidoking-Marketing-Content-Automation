@@ -32,7 +32,7 @@ def generate_seo_blog_post(
             {"role": "user", "content": content_seo_prompt},
             {
                 "role": "user",
-                "content": """
+                "content": """,
                 Avatar: {avatar}
                 Pain Points: {pain_points}
                 Solutions: {solutions}
