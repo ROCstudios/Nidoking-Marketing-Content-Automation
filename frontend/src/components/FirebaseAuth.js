@@ -4,16 +4,15 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 import { auth } from "../data/firebaseConfig";
-
+import UserStore from "../data/UserStore";
 var ui = new firebaseui.auth.AuthUI(auth);
 const FirebaseAuth = () => {
   const navigate = useNavigate();
+
   var uiConfig = {
     callbacks: {
       signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-        // User successfully signed in.
-        // Return type determines whether we continue the redirect automatically
-        // or whether we leave that to developer to handle.
+        UserStore.saveUserToCollection(authResult.user);
         return navigate("/convo");
       },
     },
