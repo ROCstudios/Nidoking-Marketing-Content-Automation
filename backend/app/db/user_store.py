@@ -28,3 +28,23 @@ class UserStore:
             print("User saved to collection:", user_data)
         except Exception as error:
             print("Error saving user to collection:", error)
+
+    async def fetch_brand(self, email):
+        try:
+            user_ref = self.db.collection("users").document(email)
+            doc = await user_ref.get()
+            if doc.exists:
+                return doc.to_dict()["brand"]
+            else:
+                print("No such brand!")
+                return None
+        except Exception as error:
+            print("Error fetching brand:", error)
+
+    async def save_brand(self, email, brand):
+        try:
+            user_ref = self.db.collection("users").document(email)
+            await user_ref.set({"brand": brand}, merge=True)
+            print("Brand saved to user:", brand)
+        except Exception as error:
+            print("Error saving brand to user:", error)
