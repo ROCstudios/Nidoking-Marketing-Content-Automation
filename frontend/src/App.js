@@ -5,7 +5,7 @@ import Conversation from "./components/Conversation";
 import ContentTopic from "./components/ContentTopic";
 import Bundle from "./components/Bundle";
 import Settings from "./components/Settings";
-import Login from "./components/Login";
+import FirebaseAuth from "./components/FirebaseAuth";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,14 +36,14 @@ function App() {
           </div>
         </div>
       ) : (
-        <Login />
+        <FirebaseAuth />
       )}
       <Routes>
-        <Route path="/" element={<Conversation />} />
+        <Route path="/" element={<FirebaseAuth />} />
+        <Route path="/convo" element={<Conversation />} />
         <Route path="/avatar" element={<ContentTopic />} />
         <Route path="/bundle" element={<Bundle />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
