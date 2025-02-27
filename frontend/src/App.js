@@ -6,12 +6,14 @@ import ContentTopic from "./components/ContentTopic";
 import Bundle from "./components/Bundle";
 import Settings from "./components/Settings";
 import Login from "./components/Login";
-import UserStore from "./data/UserStore";
+
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = UserStore.getUserData();
+    const user = {
+      email: "test@test.com",
+    };
     setUser(user);
   }, []);
 

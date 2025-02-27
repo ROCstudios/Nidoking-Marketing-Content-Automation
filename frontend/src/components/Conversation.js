@@ -12,20 +12,20 @@ const Conversation = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState("");
   const [painPoints, setPainPoints] = useState("");
   const [solution, setSolution] = useState("");
 
   const handleSubmit = async () => {
     const response = await axios.post(`${config.backendUrl}/create_brand`, {
-      user_email,
+      user_email: user.email,
       avatar,
       painPoints,
       solution,
     });
-    const authUrl = response.data.url;
     if (response.status === 200) {
-      window.location.href = authUrl;
+      navigate("/avatar");
     } else {
       setError("Failed to get authentication URL");
     }

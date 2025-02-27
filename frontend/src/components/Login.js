@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import config from "../config";
-import StepsIndicator from "../common/StepsIndicator";
-import NavBar from "../common/NavBar";
 import ErrorAlert from "../common/ErrorAlert";
+
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+
+// Configure Firebase.
+const firebaseConfig = {
+  apiKey: "AIzaSyADudOoSNeTRFvoT98xeYGHhzsbSpRnqE0",
+  authDomain: "test-nidoking-marketing.firebaseapp.com",
+  projectId: "test-nidoking-marketing",
+  storageBucket: "test-nidoking-marketing.firebasestorage.app",
+  messagingSenderId: "575940079994",
+  appId: "1:575940079994:web:2ae9e2ea3b85ee694326c3",
+  measurementId: "G-LZHK7QVJZT",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const uiConfig = {
+  signInFlow: "popup",
+  signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [widget, setWidget] = useState(null);
+
+  useEffect(() => {
+    setWidget(
+      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+    );
+  }, []);
 
   const handleLogin = async () => {
     // TODO We need to have seperate conditional logic for the Instagram token logic.
@@ -26,28 +53,8 @@ const Login = () => {
 
   return (
     <div>
-      <NavBar />
       {error && <ErrorAlert message={error} />}
-      <StepsIndicator currentStep={1} />
-      <div className="hero bg-base-200 min-h-screen -mt-16">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Login</h1>
-            <p className="py-6">
-              Let's get you generating your content! We'll redirect you to get
-              your instagram token after you verify your account and then we'll
-              send you to the main page. If you've already verified your
-              account, just click the button below.
-            </p>
-            <button
-              className="btn btn-primary mt-4 w-full"
-              onClick={handleLogin}
-            >
-              Access Generator!
-            </button>
-          </div>
-        </div>
-      </div>
+      {widget}
     </div>
   );
 };
