@@ -2,10 +2,10 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import StepsIndicator from "./StepsIndicator";
-import NavBar from "./NavBar";
+import StepsIndicator from "../common/StepsIndicator";
+import NavBar from "../common/NavBar";
 import config from "../config";
-import ErrorAlert from "./ErrorAlert";
+import ErrorAlert from "../common/ErrorAlert";
 
 const Bundle = () => {
   const navigate = useNavigate();

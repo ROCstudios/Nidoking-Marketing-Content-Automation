@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "./NavBar";
-import ErrorAlert from "./ErrorAlert";
+import NavBar from "../common/NavBar";
+import ErrorAlert from "../common/ErrorAlert";
+import axios from "axios";
+import config from "../config";
 
 const Conversation = () => {
   const navigate = useNavigate();
@@ -13,6 +15,21 @@ const Conversation = () => {
   const [avatar, setAvatar] = useState("");
   const [painPoints, setPainPoints] = useState("");
   const [solution, setSolution] = useState("");
+
+  const handleSubmit = async () => {
+    const response = await axios.post(`${config.backendUrl}/create_brand`, {
+      user_email,
+      avatar,
+      painPoints,
+      solution,
+    });
+    const authUrl = response.data.url;
+    if (response.status === 200) {
+      window.location.href = authUrl;
+    } else {
+      setError("Failed to get authentication URL");
+    }
+  };
 
   return (
     <div>
@@ -43,7 +60,7 @@ const Conversation = () => {
                 <textarea
                   placeholder="Describe their problems..."
                   className="textarea textarea-bordered textarea-lg w-full max-w-lg"
-                  onChange={(e) => setAvatar(e.target.value)}
+                  onChange={(e) => setPainPoints(e.target.value)}
                 ></textarea>
               </label>
               <label>

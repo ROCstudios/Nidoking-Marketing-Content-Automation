@@ -3,9 +3,9 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
-import NavBar from "./NavBar";
-import StepsIndicator from "./StepsIndicator";
-import ErrorAlert from "./ErrorAlert";
+import NavBar from "../common/NavBar";
+import StepsIndicator from "../common/StepsIndicator";
+import ErrorAlert from "../common/ErrorAlert";
 
 const ContentTopic = () => {
   const navigate = useNavigate();

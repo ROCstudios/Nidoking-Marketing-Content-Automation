@@ -9,7 +9,7 @@ const NavBar = ({ index }) => {
   };
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-gray-200">
       <div className="navbar-start">
         <div className="flex-none">
           <StepsIndicator currentStep={index} />
@@ -32,9 +32,6 @@ const NavBar = ({ index }) => {
             </li>
           </ul>
         </div>
-      </div>
-      <div className="navbar-center">
-        <a className="text-xl p-0">Marketing Hero</a>
       </div>
       <div className="navbar-end">
         <div className="join grid grid-cols-2">
