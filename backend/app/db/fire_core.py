@@ -19,3 +19,5 @@ config = {
 firebase = empyrebase.initialize_app(config)
 
 fire_data = firebase.firestore()
+
+fire_storage = firebase.storage()

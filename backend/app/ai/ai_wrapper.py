@@ -91,6 +91,37 @@ def generate_seo_blog_post(
         return None
 
 
+def generate_image_prompt(prompt):
+    try:
+        # gpt prompt generation from prompt parameter
+        response = openai.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": image_system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": image_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            temperature=1.2,
+            top_p=1.0,
+        )
+
+        prompt = response.choices[0].message.content
+        return prompt
+
+    except Exception as e:
+        print(f"Error generating image prompt: {str(e)}")
+        return None
+
+
 def generate_image(prompt):
     try:
         # gpt prompt generation from prompt parameter

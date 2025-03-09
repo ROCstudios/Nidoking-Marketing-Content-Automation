@@ -14,6 +14,7 @@ const FirebaseAuth = () => {
   var uiConfig = {
     callbacks: {
       signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        console.log("🚀 ~ FirebaseAuth ~ authResult:", authResult);
         fetch(`${config.backendUrl}/user/save`, {
           method: "POST",
           headers: {
@@ -27,13 +28,22 @@ const FirebaseAuth = () => {
             }
             return response.json();
           })
-          .then((data) => {
+          .then(async (data) => {
             console.log("User saved successfully:", data);
+            await fetch(`${config.backendUrl}/auth/token_register`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                refresh_token: authResult.user.refreshToken,
+              }),
+            });
+            navigate("/convo");
           })
           .catch((error) => {
             console.error("Error saving user:", error);
           });
-        return navigate("/convo");
       },
     },
     // Will use popup for IDP Providers sign-in flow instead of the default, redirect.

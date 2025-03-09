@@ -1,9 +1,6 @@
 from flask import Blueprint, request, jsonify
-from db.user_store import UserStore
-from db.bundle_store import BundleStore
-
-user_store = UserStore()
-bundle_store = BundleStore()
+from db.user_store import user_store
+from db.bundle_store import bundle_store
 
 user_blueprint = Blueprint("user", __name__)
 

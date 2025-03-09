@@ -49,3 +49,7 @@ class UserStore:
             print("Brand saved to user:", brand)
         except Exception as error:
             print("Error saving brand to user:", error)
+
+
+# Usage
+user_store = UserStore()

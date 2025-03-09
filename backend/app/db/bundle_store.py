@@ -1,7 +1,40 @@
-from db.fire_core import fire_data
+from db.fire_core import fire_data, fire_storage
 
 
 class BundleStore:
+
+    async def save_image(self, image, storage_path, user_token=None):
+        try:
+            if user_token:
+                fire_storage.child(storage_path).put(image, user_token)
+            else:
+                fire_storage.child(storage_path).put(image)
+            print(f"Image uploaded to {storage_path}")
+        except Exception as error:
+            print("Error uploading image:", error)
+
+    async def download_image(self, storage_path, local_file_name):
+        try:
+            fire_storage.child(storage_path).download(local_file_name)
+            print(f"Image downloaded to {local_file_name}")
+        except Exception as error:
+            print("Error downloading image:", error)
+
+    async def get_image_url(self, storage_path, user_token):
+        try:
+            url = fire_storage.child(storage_path).get_url(user_token)
+            print(f"Image URL: {url}")
+            return url
+        except Exception as error:
+            print("Error getting image URL:", error)
+            return None
+
+    async def delete_image(self, storage_path, user_token):
+        try:
+            fire_storage.child(storage_path).delete(user_token)
+            print(f"Image deleted from {storage_path}")
+        except Exception as error:
+            print("Error deleting image:", error)
 
     async def save_bundle(self, email, title, bundle):
         try:
@@ -28,7 +61,7 @@ class BundleStore:
 
     async def fetch_bundle(self, email, title):
         try:
-            document = fire_data.get_document(f"users/{email}/bundles/{title}")
+            document = await fire_data.get_document(f"users/{email}/bundles/{title}")
             if document.exists:
                 return document.to_dict()
             else:
@@ -50,4 +83,4 @@ class BundleStore:
 
 
 # Usage
-# bundle_store = BundleStore()
+bundle_store = BundleStore()
