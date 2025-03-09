@@ -4,15 +4,35 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 import { auth } from "../data/firebaseConfig";
-import UserStore from "../data/UserStore";
+import config from "../config";
+
 var ui = new firebaseui.auth.AuthUI(auth);
+
 const FirebaseAuth = () => {
   const navigate = useNavigate();
 
   var uiConfig = {
     callbacks: {
       signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-        UserStore.saveUserToCollection(authResult.user);
+        fetch(`${config.backendUrl}/user/save`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(authResult.user),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("User saved successfully:", data);
+          })
+          .catch((error) => {
+            console.error("Error saving user:", error);
+          });
         return navigate("/convo");
       },
     },

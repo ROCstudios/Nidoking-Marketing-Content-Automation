@@ -1,12 +1,8 @@
-import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import firestore
 
 
 class UserStore:
     def __init__(self):
-        # Initialize Firebase Admin SDK
-        cred = credentials.ApplicationDefault()
-        firebase_admin.initialize_app(cred)
         self.db = firestore.client()
 
     async def fetch_user(self, email):

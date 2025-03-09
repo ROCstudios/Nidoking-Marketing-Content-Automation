@@ -44,30 +44,8 @@ class UserStore {
   getCurrentUser() {
     return this.user;
   }
-
-  async saveUserToCollection(user) {
-    try {
-      const userRef = firebase.firestore().collection("users").doc(user.email);
-      const userData = {
-        uid: user.uid,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        displayName: user.displayName,
-        isAnonymous: user.isAnonymous,
-        providerData: user.providerData,
-        stsTokenManager: user.stsTokenManager,
-        createdAt: user.createdAt,
-        lastLoginAt: user.lastLoginAt,
-      };
-      await userRef.set(userData, { merge: true });
-      console.log("User saved to collection:", userData);
-    } catch (error) {
-      console.error("Error saving user to collection:", error);
-    }
-  }
 }
 
 const instance = new UserStore();
-Object.freeze(instance);
 
 export default instance;

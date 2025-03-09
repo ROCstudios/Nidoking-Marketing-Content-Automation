@@ -5,6 +5,7 @@ import NavBar from "../common/NavBar";
 import ErrorAlert from "../common/ErrorAlert";
 import axios from "axios";
 import config from "../config";
+import UserStore from "../data/UserStore";
 
 const Conversation = () => {
   const navigate = useNavigate();
@@ -18,11 +19,13 @@ const Conversation = () => {
   const [solution, setSolution] = useState("");
 
   const handleSubmit = async () => {
-    const response = await axios.post(`${config.backendUrl}/create_brand`, {
-      user_email: user.email,
-      avatar,
-      painPoints,
-      solution,
+    const response = await axios.post(`${config.backendUrl}/user/brand`, {
+      email: UserStore.getCurrentUser().email,
+      brand: {
+        avatar,
+        painPoints,
+        solution,
+      },
     });
     if (response.status === 200) {
       navigate("/avatar");
@@ -77,7 +80,7 @@ const Conversation = () => {
               </label>
               <button
                 className="btn btn-primary w-full max-w-lg mt-4"
-                onClick={() => (window.location.href = "/avatar")}
+                onClick={handleSubmit}
               >
                 Continue to Content
               </button>

@@ -1,42 +1,34 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from blueprint.content_route import content_bp
-from blueprint.media_route import media_bp
 import os
+import firebase_admin
+from firebase_admin import credentials
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
+cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred)
+
 app = Flask(__name__)
-CORS(app)
-
-app.register_blueprint(content_bp)
-app.register_blueprint(media_bp)
-
-
-@app.route("/api/data", methods=["GET"])
-def get_data():
-    try:
-        # Sample response - replace with actual data handling
-        data = {
-            "message": "Data retrieved successfully",
-            "data": ["item1", "item2", "item3"],
-        }
-        return jsonify(data), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+CORS(
+    app,
+    resources={
+        r"/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"]}
+    },
+)
 
 
-@app.route("/api/submit", methods=["POST"])
-def submit_data():
-    try:
-        data = request.get_json()
-        # Process the received data here
-        # For now, just echo back the received data
-        response = {"message": "Data received successfully", "received_data": data}
-        return jsonify(response), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
+def create_app():
+    from blueprint.user_route import user_blueprint
+    from blueprint.content_route import content_bp
+    from blueprint.media_route import media_bp
+
+    app.register_blueprint(content_bp, url_prefix="/content")
+    app.register_blueprint(media_bp, url_prefix="/media")
+    app.register_blueprint(user_blueprint, url_prefix="/user")
+    return app
 
 
 if __name__ == "__main__":
+    app = create_app()
     app.run(debug=True, host="0.0.0.0", port=5001)

@@ -1,12 +1,10 @@
-import firebase_admin
 from firebase_admin import firestore
 
 
 class BundleStore:
+    _firebase_initialized = False
+
     def __init__(self):
-        # Initialize Firebase Admin SDK
-        # Application Default credentials are automatically created.
-        app = firebase_admin.initialize_app()
         self.db = firestore.client()
 
     async def save_bundle(self, email, bundle):
