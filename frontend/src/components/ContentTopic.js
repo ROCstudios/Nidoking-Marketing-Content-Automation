@@ -4,22 +4,31 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import config from "../config";
 import NavBar from "../common/NavBar";
-import StepsIndicator from "../common/StepsIndicator";
 import ErrorAlert from "../common/ErrorAlert";
+import UserStore from "../data/UserStore";
 
 const ContentTopic = () => {
   const navigate = useNavigate();
-
-  const [blogPost, setBlogPost] = useState(true);
-  const [textPost, setTextPost] = useState(true);
-  const [facelessVideo, setFacelessVideo] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [topic, setTopic] = useState("");
-
+  const [title, setTitle] = useState("");
   useEffect(() => {}, []);
+
+  const handleSubmit = async () => {
+    const response = await axios.post(`${config.backendUrl}/content/text`, {
+      email: UserStore.getCurrentUser().email,
+      title: title,
+      topic: topic,
+    });
+    if (response.status === 201) {
+      navigate("/bundle");
+    } else {
+      setError("Failed to get authentication URL");
+    }
+  };
 
   const showModal = () => {
     setError(null);
@@ -30,46 +39,11 @@ const ContentTopic = () => {
     <div>
       <dialog id="winning_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">
-            What would you like to generate?
-          </h3>
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="label-text">SEO Blog Post</span>
-              <input
-                type="checkbox"
-                checked={blogPost}
-                onChange={(e) => setBlogPost(e.target.checked)}
-                className="checkbox"
-              />
-            </label>
-          </div>
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="label-text">Text Post</span>
-              <input
-                type="checkbox"
-                checked={textPost}
-                onChange={(e) => setTextPost(e.target.checked)}
-                className="checkbox"
-              />
-            </label>
-          </div>
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <span className="label-text">Faceless Video</span>
-              <input
-                type="checkbox"
-                checked={facelessVideo}
-                onChange={(e) => setFacelessVideo(e.target.checked)}
-                className="checkbox"
-              />
-            </label>
-          </div>
+          <h3 className="font-bold text-lg">Are you sure?</h3>
           <div className="py-4">
             <button
               className="btn btn-primary w-full max-w-lg"
-              onClick={showModal}
+              onClick={handleSubmit}
             >
               Let's Go! Generate Content
             </button>
@@ -90,6 +64,19 @@ const ContentTopic = () => {
               What would you like to talk about?
             </h1>
             <p className="py-6"></p>
+            <label>
+              <div className="label font-bold">
+                <span className="font-bold">
+                  Quickly add a title for your content bundle
+                </span>
+              </div>
+              <input
+                type="text"
+                placeholder="Let's get organized..."
+                className="input input-bordered w-full max-w-lg"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </label>
             <label>
               <div className="label font-bold">
                 <span className="font-bold">

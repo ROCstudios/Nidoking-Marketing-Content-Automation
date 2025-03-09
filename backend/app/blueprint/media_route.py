@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ai_gen import generate_image
+from ai.ai_wrapper import generate_image
 import os
 
 script_dir = os.path.dirname(os.path.abspath(__file__))

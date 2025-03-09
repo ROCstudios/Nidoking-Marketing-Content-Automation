@@ -3,13 +3,12 @@ from db.fire_core import fire_data
 
 class BundleStore:
 
-    async def save_bundle(self, email, bundle):
+    async def save_bundle(self, email, title, bundle):
         try:
             fire_data.create_document(
-                f"users/{email}/bundles/{bundle['title']}",
+                f"users/{email}/bundles/{title}",
                 {
                     **bundle,
-                    "createdAt": fire_data.SERVER_TIMESTAMP,
                 },
             )
             print("Bundle saved:", bundle)
@@ -21,10 +20,7 @@ class BundleStore:
             for bundle in bundles:
                 fire_data.create_document(
                     f"users/{email}/bundles/{bundle['title']}",
-                    {
-                        **bundle,
-                        "createdAt": fire_data.SERVER_TIMESTAMP,
-                    },
+                    {**bundle},
                 )
             print("All bundles saved:", bundles)
         except Exception as error:
@@ -32,7 +28,7 @@ class BundleStore:
 
     async def fetch_bundle(self, email, title):
         try:
-            document = fire_data.document(f"users/{email}/bundles/{title}")
+            document = fire_data.get_document(f"users/{email}/bundles/{title}")
             if document.exists:
                 return document.to_dict()
             else:

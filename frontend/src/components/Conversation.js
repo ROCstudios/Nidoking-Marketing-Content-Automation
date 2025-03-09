@@ -13,7 +13,6 @@ const Conversation = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState("");
   const [painPoints, setPainPoints] = useState("");
   const [solution, setSolution] = useState("");
@@ -27,7 +26,7 @@ const Conversation = () => {
         solution,
       },
     });
-    if (response.status === 200) {
+    if (response.status === 201) {
       navigate("/avatar");
     } else {
       setError("Failed to get authentication URL");

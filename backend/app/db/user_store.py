@@ -5,7 +5,7 @@ class UserStore:
 
     async def fetch_user(self, email):
         try:
-            document = fire_data.document(f"users/{email}")
+            document = fire_data.get_document(f"users/{email}")
             if document.exists:
                 return document.to_dict()
             else:
@@ -29,9 +29,9 @@ class UserStore:
 
     async def fetch_brand(self, email):
         try:
-            document = fire_data.document(f"users/{email}")
-            if document.exists:
-                return document.to_dict()["brand"]
+            document = fire_data.get_document(f"users/{email}")
+            if isinstance(document, dict) and "brand" in document:
+                return document["brand"]
             else:
                 print("No such brand!")
                 return None

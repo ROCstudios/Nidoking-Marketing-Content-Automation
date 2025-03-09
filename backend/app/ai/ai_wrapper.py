@@ -16,12 +16,48 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 model = "gpt-4o-mini"
 
 
+def generate_social_media_caption(
+    avatar: str,
+    pain_points: str,
+    solutions: str,
+    content: str,
+):
+    # Generate the caption using the OpenAI API
+    response = openai.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": content_system_prompt},
+            {
+                "role": "user",
+                "content": f"""
+                Avatar: {avatar}
+                Pain Points: {pain_points}
+                Solutions: {solutions}
+                Content: {content}
+                Generate a catchy Instagram/Facebook caption based on the above details.
+                """,
+            },
+        ],
+        temperature=0.7,
+        top_p=0.9,
+    )
+
+    try:
+        # Get the generated caption text from the response
+        caption_text = response.choices[0].message.content
+        return caption_text
+
+    except Exception as e:
+        print(f"Error generating social media caption: {str(e)}")
+        return None
+
+
 # Function to simulate a conversation between two personas
 def generate_seo_blog_post(
     avatar: str,
     pain_points: str,
     solutions: str,
-    brand_voice: str,
+    content: str,
 ):
 
     # Generate the response using the OpenAI API
@@ -32,11 +68,11 @@ def generate_seo_blog_post(
             {"role": "user", "content": content_seo_prompt},
             {
                 "role": "user",
-                "content": """,
+                "content": f"""
                 Avatar: {avatar}
                 Pain Points: {pain_points}
                 Solutions: {solutions}
-                Brand Voice: {brand_voice}
+                Topic: {content}
             """,
             },
             {"role": "user", "content": content_marketing_connections_prompt},
