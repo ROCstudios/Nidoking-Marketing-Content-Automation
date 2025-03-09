@@ -1,56 +1,40 @@
-from firebase_admin import firestore
+from db.fire_core import fire_data
 
 
 class BundleStore:
-    _firebase_initialized = False
-
-    def __init__(self):
-        self.db = firestore.client()
 
     async def save_bundle(self, email, bundle):
         try:
-            bundle_ref = (
-                self.db.collection("users")
-                .document(email)
-                .collection("bundles")
-                .document(bundle["title"])
+            fire_data.create_document(
+                f"users/{email}/bundles/{bundle['title']}",
+                {
+                    **bundle,
+                    "createdAt": fire_data.SERVER_TIMESTAMP,
+                },
             )
-            bundle_data = {
-                **bundle,
-                "createdAt": firestore.SERVER_TIMESTAMP,
-            }
-            await bundle_ref.set(bundle_data, merge=True)
-            print("Bundle saved:", bundle_data)
+            print("Bundle saved:", bundle)
         except Exception as error:
             print("Error saving bundle:", error)
 
     async def save_all_bundles(self, email, bundles):
         try:
-            bundle_ref = (
-                self.db.collection("users").document(email).collection("bundles")
-            )
-            bundle_data = {}
             for bundle in bundles:
-                bundle_data[bundle["title"]] = {
-                    **bundle,
-                    "createdAt": firestore.SERVER_TIMESTAMP,
-                }
-            await bundle_ref.set(bundle_data, merge=True)
-            print("All bundles saved:", bundle_data)
+                fire_data.create_document(
+                    f"users/{email}/bundles/{bundle['title']}",
+                    {
+                        **bundle,
+                        "createdAt": fire_data.SERVER_TIMESTAMP,
+                    },
+                )
+            print("All bundles saved:", bundles)
         except Exception as error:
             print("Error saving all bundles:", error)
 
     async def fetch_bundle(self, email, title):
         try:
-            bundle_ref = (
-                self.db.collection("users")
-                .document(email)
-                .collection("bundles")
-                .document(title)
-            )
-            doc = await bundle_ref.get()
-            if doc.exists:
-                return doc.to_dict()
+            document = fire_data.document(f"users/{email}/bundles/{title}")
+            if document.exists:
+                return document.to_dict()
             else:
                 print("No such bundle!")
                 return None
@@ -59,12 +43,9 @@ class BundleStore:
 
     async def fetch_all_bundles(self, email):
         try:
-            bundle_ref = (
-                self.db.collection("users").document(email).collection("bundles")
-            )
-            docs = await bundle_ref.get()
-            if docs:
-                return {doc.id: doc.to_dict() for doc in docs}
+            documents = fire_data.list_documents(f"users/{email}/bundles")
+            if documents:
+                return {document.id: document.to_dict() for document in documents}
             else:
                 print("No bundles found for this user!")
                 return {}

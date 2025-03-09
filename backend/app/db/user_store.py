@@ -1,16 +1,13 @@
-from firebase_admin import firestore
+from db.fire_core import fire_data
 
 
 class UserStore:
-    def __init__(self):
-        self.db = firestore.client()
 
     async def fetch_user(self, email):
         try:
-            user_ref = self.db.collection("users").document(email)
-            doc = await user_ref.get()
-            if doc.exists:
-                return doc.to_dict()
+            document = fire_data.document(f"users/{email}")
+            if document.exists:
+                return document.to_dict()
             else:
                 print("No such user!")
                 return None
@@ -18,19 +15,23 @@ class UserStore:
             print("Error fetching user:", error)
 
     async def save_user(self, user_data):
+
         try:
-            user_ref = self.db.collection("users").document(user_data["email"])
-            await user_ref.set(user_data, merge=True)
-            print("User saved to collection:", user_data)
+            fire_data.create_document(
+                f"users/{user_data['email']}",
+                {
+                    "email": user_data["email"],
+                },
+            )
+            print("User saved to collection")
         except Exception as error:
             print("Error saving user to collection:", error)
 
     async def fetch_brand(self, email):
         try:
-            user_ref = self.db.collection("users").document(email)
-            doc = await user_ref.get()
-            if doc.exists:
-                return doc.to_dict()["brand"]
+            document = fire_data.document(f"users/{email}")
+            if document.exists:
+                return document.to_dict()["brand"]
             else:
                 print("No such brand!")
                 return None
@@ -39,8 +40,12 @@ class UserStore:
 
     async def save_brand(self, email, brand):
         try:
-            user_ref = self.db.collection("users").document(email)
-            await user_ref.set({"brand": brand}, merge=True)
+            fire_data.update_document(
+                f"users/{email}",
+                {
+                    "brand": brand,
+                },
+            )
             print("Brand saved to user:", brand)
         except Exception as error:
             print("Error saving brand to user:", error)
