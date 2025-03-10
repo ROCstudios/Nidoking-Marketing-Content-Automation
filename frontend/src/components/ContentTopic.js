@@ -15,19 +15,9 @@ const ContentTopic = () => {
 
   const [topic, setTopic] = useState("");
   const [title, setTitle] = useState("");
-  useEffect(() => {}, []);
 
   const handleSubmit = async () => {
-    const response = await axios.post(`${config.backendUrl}/content/text`, {
-      email: UserStore.getCurrentUser().email,
-      title: title,
-      topic: topic,
-    });
-    if (response.status === 201) {
-      navigate("/bundle");
-    } else {
-      setError("Failed to get authentication URL");
-    }
+    navigate("/bundle", { state: { title, topic } });
   };
 
   const showModal = () => {

@@ -1,19 +1,39 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import StepsIndicator from "../common/StepsIndicator";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../common/NavBar";
 import config from "../config";
 import ErrorAlert from "../common/ErrorAlert";
+import AudioPlayer from "../common/AudioPlayer";
+import UserStore from "../data/UserStore";
 
 const Bundle = () => {
   const navigate = useNavigate();
+  const { title, topic } = useLocation().state;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [bundle, setBundle] = useState({
+    seo_blog_post: "",
+    social_media_caption: "",
+    image: "",
+    movie_script: "",
+    audio_url: "",
+  });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const response = axios.post(`${config.backendUrl}/content/text`, {
+      email: UserStore.getCurrentUser().email,
+      title: title,
+      topic: topic,
+    });
+    if (response.status === 201) {
+      setBundle(response.data);
+    } else {
+      setError("Failed to get authentication URL");
+    }
+  }, [title, topic]);
 
   return (
     <div>
@@ -25,27 +45,7 @@ const Bundle = () => {
             <div className="card bg-base-100 w-96 h-[calc(24rem/9*16)] shadow-xl">
               <div className="card-body">
                 <h2 className="card-title">SEO Blog Post</h2>
-                <p>
-                  Are you struggling to keep up with your social media presence
-                  while running your business? You're not alone. Many
-                  entrepreneurs find themselves overwhelmed by the constant
-                  demand for engaging content.
-                </p>
-                <p>
-                  In today's digital landscape, maintaining a strong online
-                  presence is crucial for business success. However, creating
-                  quality content consistently can feel like a full-time job on
-                  its own. From crafting engaging posts to selecting the perfect
-                  visuals, the process can be time-consuming and mentally
-                  draining.
-                </p>
-                <p>
-                  But what if there was a better way? Imagine having a dedicated
-                  AI assistant that understands your brand voice and can
-                  generate compelling content in seconds. That's exactly what
-                  our platform offers - a revolutionary solution that combines
-                  artificial intelligence with marketing expertise.
-                </p>
+                <p>{bundle.seo_blog_post}</p>
                 <div className="card-actions justify-end">
                   <button className="btn btn-primary">Copy</button>
                 </div>
@@ -53,13 +53,15 @@ const Bundle = () => {
             </div>
             <div className="card bg-base-100 w-96 h-[calc(12rem/9*16)] my-6 shadow-xl">
               <div className="card-body">
-                <h2 className="card-title">LinkedIn Post</h2>
-                <p>
-                  Are you struggling to keep up with your social media presence
-                  while running your business? You're not alone. Many
-                  entrepreneurs find themselves overwhelmed by the constant
-                  demand for engaging content.
-                </p>
+                <h2 className="card-title">Instagram Post</h2>
+                <figure className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+                  <img
+                    src={bundle.image}
+                    alt="Generated marketing visual"
+                    className="w-full h-full object-cover"
+                  />
+                </figure>
+                <p>{bundle.social_media_caption}</p>
                 <div className="card-actions justify-end">
                   <button className="btn btn-primary">Copy</button>
                 </div>
@@ -99,25 +101,16 @@ const Bundle = () => {
             </div>
             <div className="card bg-base-100 w-96 my-6 shadow-xl">
               <div className="card-body">
-                <h2 className="card-title">Generated Image</h2>
-                <figure className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                  <img
-                    src="/assets/deer.jpg"
-                    alt="Generated marketing visual"
-                    className="w-full h-full object-cover"
-                  />
-                </figure>
-                <div className="card-actions justify-end">
-                  <button className="btn btn-primary">Download</button>
-                </div>
+                <h2 className="card-title">Movie Script</h2>
+                <p>{bundle.movie_script}</p>
               </div>
             </div>
             <div className="card bg-base-100 w-96 my-6 shadow-xl">
               <div className="card-body">
-                <h2 className="card-title">Long Tweet</h2>
-                <p>If a dog chews shoes whose shoes does he choose?</p>
-                <div className="card-actions justify-end">
-                  <button className="btn btn-primary">Copy</button>
+                <h2 className="card-title">Audio Narration</h2>
+                <div className="container mx-auto p-4">
+                  <h1 className="text-2xl font-bold mb-4">Listen to Audio</h1>
+                  <AudioPlayer audioUrl={bundle.audio_url} />
                 </div>
               </div>
             </div>

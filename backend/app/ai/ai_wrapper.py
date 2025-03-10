@@ -16,6 +16,75 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 model = "gpt-4o-mini"
 
 
+def generate_movie_script(social_media_caption, seo_blog_post):
+
+    response = openai.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": content_system_prompt},
+            {
+                "role": "user",
+                "content": f"""
+                Create a movie script based on the following:
+                Social Media Caption: {social_media_caption}
+                SEO Blog Post: {seo_blog_post}
+                Format the script with scenes that include a timestamp, description, and dialogue.
+                Like this example  {
+                    "timestamp": "00:00",
+                    "description": "This is the description of the scene",    
+                    "dialogue": "This is the dialogue of the scene",
+                }
+                """,
+            },
+        ],
+        temperature=0.7,
+        top_p=0.9,
+    )
+
+    try:
+        # Get the generated script text from the response
+        script = response.choices[0].message.content
+        return script
+
+    except Exception as e:
+        print(f"Error generating movie script: {str(e)}")
+        return None
+
+
+def generate_movie_scenes(movie_script):
+
+    response = openai.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": content_system_prompt},
+            {
+                "role": "user",
+                "content": f"""
+                Create movie scenes based on the following:
+                Movie Script: {movie_script}
+                Format the script with scenes that include a timestamp, description, and dialogue.
+                Like this example  {
+                    "timestamp": "00:00",
+                    "description": "This is the description of the scene",    
+                    "dialogue": "This is the dialogue of the scene",
+                }
+                """,
+            },
+        ],
+        temperature=0.7,
+        top_p=0.9,
+    )
+
+    try:
+        # Get the generated script text from the response
+        script = response.choices[0].message.content
+        return script
+
+    except Exception as e:
+        print(f"Error generating movie script: {str(e)}")
+        return None
+
+
 def generate_social_media_caption(
     avatar: str,
     pain_points: str,
