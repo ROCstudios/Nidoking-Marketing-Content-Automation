@@ -50,6 +50,18 @@ class UserStore:
         except Exception as error:
             print("Error saving brand to user:", error)
 
+    async def update_voice_render(self, user_id, voice_id, render_id):
+        try:
+            # Update the user's document with the new voice_id and render_id
+            fire_data.update_document(
+                f"users/{user_id}", {"voice_id": voice_id, "render_id": render_id}
+            )
+            print(
+                f"Voice and Render IDs ({voice_id}, {render_id}) updated for user {user_id}"
+            )
+        except Exception as error:
+            print("Error updating voice/render IDs:", error)
+
 
 # Usage
 user_store = UserStore()

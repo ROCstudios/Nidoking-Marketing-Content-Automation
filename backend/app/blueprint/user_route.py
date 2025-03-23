@@ -53,3 +53,48 @@ async def save_user_brand():
     brand = body.get("brand")
     await user_store.save_brand(email, brand)
     return jsonify({"message": "Brand saved successfully"}), 201
+
+
+@user_blueprint.route("/voice_render", methods=["POST"])
+async def save_voice_render():
+    data = request.json
+    user_id = data.get("user_id")
+    voice_id = data.get("voice_id")
+    render_id = data.get("render_id")
+
+    if not (user_id and voice_id and render_id):
+        return (
+            jsonify({"error": "Missing required fields: user_id, voice_id, render_id"}),
+            400,
+        )
+
+    try:
+        await user_store.update_voice_render(user_id, voice_id, render_id)
+        return (
+            jsonify({"message": "User voice and render info updated successfully"}),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@user_blueprint.route("/voice_render", methods=["GET"])
+async def get_voice_render():
+    user_id = request.args.get("user_id")
+
+    if not user_id:
+        return jsonify({"error": "Missing required field: user_id"}), 400
+
+    try:
+        user_data = await user_store.fetch_user(user_id)
+        if not user_data:
+            return jsonify({"error": f"User with ID {user_id} not found"}), 404
+
+        voice_render_data = {
+            "voice_id": user_data.get("voice_id"),
+            "render_id": user_data.get("render_id"),
+        }
+
+        return jsonify(voice_render_data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

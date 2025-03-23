@@ -38,3 +38,31 @@ def get_characters():
     ]
 
     return jsonify(clean_characters)
+
+
+@characters_bp.route("/voices", methods=["GET"])
+def get_voices():
+    # ElevenLabs Voices endpoint (from https://elevenlabs.io/docs/api-reference/voices/get-all)
+    api_url = "https://api.elevenlabs.io/v1/voices"
+    headers = {
+        "xi-api-key": "sk_0ef25f337d445c0ef1250314a6322e3821ab006a0f84c933"  # Replace with your ElevenLabs API key
+    }
+
+    try:
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        return jsonify({"error": "Failed to fetch voices", "details": str(e)}), 500
+
+    voices_data = response.json()
+    voices = voices_data.get("voices", [])
+    clean_voices = [
+        {
+            "voice_id": voice.get("voice_id"),
+            "name": voice.get("name"),
+            "sample_url": voice.get("preview_url"),
+        }
+        for voice in voices
+    ]
+
+    return jsonify(clean_voices)
