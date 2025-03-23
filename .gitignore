@@ -10,3 +10,4 @@ frontend/build
 frontend/public/
 backend/app/__pycache__
 backend/app/blueprint/__pycache__
+backend/app/ai/__pycache__/ai_wrapper.cpython-311.pyc

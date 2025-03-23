@@ -5,6 +5,7 @@ import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 import { auth } from "../data/firebaseConfig";
 import config from "../config";
+import "firebaseui/dist/firebaseui.css";
 
 var ui = new firebaseui.auth.AuthUI(auth);
 
@@ -58,8 +59,7 @@ const FirebaseAuth = () => {
   ui.start("#firebaseui-auth-container", uiConfig);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-base-200 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-4">Firebase Authentication</h1>
+    <div className="flex flex-col items-center justify-center p-4">
       <div id="firebaseui-auth-container" className="w-full max-w-md"></div>
     </div>
   );

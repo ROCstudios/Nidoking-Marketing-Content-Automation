@@ -6,6 +6,7 @@ import ContentTopic from "./components/ContentTopic";
 import Bundle from "./components/Bundle";
 import Settings from "./components/Settings";
 import FirebaseAuth from "./components/FirebaseAuth";
+import Avatars from "./components/Avatars";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -42,6 +43,7 @@ function App() {
         <Route path="/" element={<FirebaseAuth />} />
         <Route path="/convo" element={<Conversation />} />
         <Route path="/avatar" element={<ContentTopic />} />
+        <Route path="/avatars" element={<Avatars />} />
         <Route path="/bundle" element={<Bundle />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>

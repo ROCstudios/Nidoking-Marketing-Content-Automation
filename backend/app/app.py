@@ -19,11 +19,13 @@ def create_app():
     from blueprint.content_route import content_bp
     from blueprint.media_route import media_bp
     from blueprint.auth_route import auth_blueprint
+    from blueprint.characters_route import characters_bp
 
     app.register_blueprint(content_bp, url_prefix="/content")
     app.register_blueprint(media_bp, url_prefix="/media")
     app.register_blueprint(user_blueprint, url_prefix="/user")
     app.register_blueprint(auth_blueprint, url_prefix="/auth")
+    app.register_blueprint(characters_bp, url_prefix="/characters")
 
     return app
 

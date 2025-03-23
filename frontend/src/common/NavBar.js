@@ -1,7 +1,7 @@
 import React from "react";
 import StepsIndicator from "./StepsIndicator";
 const NavBar = ({ index }) => {
-  const pages = ["/", "/avatar", "/bundle", "/poster"];
+  const pages = ["/convo", "/avatar", "/avatars", "/bundle", "/poster"];
 
   const navigate = (direction) => {
     const newIndex = direction === "prev" ? index - 1 : index + 1;
@@ -15,16 +15,19 @@ const NavBar = ({ index }) => {
           <StepsIndicator currentStep={index} />
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a href="/">Brand</a>
+              <a href="/convo">Brand</a>
             </li>
             <li>
               <a href="/avatar">Topic</a>
             </li>
             <li>
+              <a href="/avatars">Avatars</a>
+            </li>
+            <li>
               <a href="/bundle">Bundle</a>
             </li>
             <li>
-              {index >= 3 ? (
+              {index >= 5 ? (
                 <a href="/poster">Review</a>
               ) : (
                 <span className="text-gray-400">Review</span>
@@ -43,7 +46,7 @@ const NavBar = ({ index }) => {
               Prev
             </button>
           )}
-          {index < 4 && (
+          {index < 5 && (
             <button
               className="join-item btn btn-outline"
               onClick={() => navigate("next")}
