@@ -10,34 +10,17 @@ import UserStore from "../data/UserStore";
 const ContentTopic = () => {
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [topic, setTopic] = useState("");
   const [title, setTitle] = useState("");
-
-  const handleSubmit = async () => {
-    navigate("/bundle", { state: { title, topic } });
-  };
-
-  const showModal = () => {
-    setError(null);
-    document.getElementById("winning_modal").showModal();
-  };
 
   return (
     <div>
       <dialog id="winning_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Are you sure?</h3>
-          <div className="py-4">
-            <button
-              className="btn btn-primary w-full max-w-lg"
-              onClick={handleSubmit}
-            >
-              Let's Go! Generate Content
-            </button>
-          </div>
+          <div className="py-4"></div>
           <div className="modal-action">
             <form method="dialog">
               <button className="btn">Cancel</button>
@@ -79,12 +62,16 @@ const ContentTopic = () => {
                 onChange={(e) => setTopic(e.target.value)}
               ></textarea>
             </label>
-            <button
-              className="btn btn-primary w-full max-w-lg mt-4"
-              onClick={showModal}
-            >
-              Generate Content Bundle
-            </button>
+            <div className="flex flex-col gap-4 mt-4">
+              <button
+                className="btn btn-secondary w-full max-w-lg"
+                onClick={() =>
+                  navigate("/avatars", { state: { title, topic } })
+                }
+              >
+                Move On To Choose Avatar
+              </button>
+            </div>
           </div>
         </div>
       </div>

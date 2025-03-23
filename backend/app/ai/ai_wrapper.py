@@ -25,15 +25,28 @@ def generate_movie_script(social_media_caption, seo_blog_post):
             {
                 "role": "user",
                 "content": f"""
-                Create a movie script based on the following:
+                Create a narration script based on the following:
                 Social Media Caption: {social_media_caption}
                 SEO Blog Post: {seo_blog_post}
-                Format the script with scenes that include a timestamp, description, and dialogue.
-                Like this example  {
-                    "timestamp": "00:00",
-                    "description": "This is the description of the scene",    
-                    "dialogue": "This is the dialogue of the scene",
-                }
+                Format the script in common speech.
+                Make it engaging and interesting.
+                Make it 1 minute long.
+                Write the text at an 3rd grade reading and writing level in simple language. The text you will rewrite will follow the colon (:) at the end. If there is no colon then rewrite your previous output in the conversation before this prompt, but only if there is no text after the colon.  You MUST keep the formatting and header formatting of the original.
+
+                Write in a casual and direct way without losing any of the key concepts in the text you are rewriting. Key concepts are defined as powerful statements, emotional sentences, or sentences containing industry terms or proper nouns.
+
+                Constraints:
+                * Remove emojis.
+                * Never start with a question. Instead use an interest piquing personal statement.
+                * Make sure there are smooth transitions between sentences.
+                * Remove all metaphors and analogies.
+                * Keep the same identical formatting of the existing text.
+
+                When writing, please do not use the following words or phrases or any words similar to the following in any of the content:
+                realm, landscape, game-changing, in conclusion, firstly, secondly, lastly, delve, in light of, not to mention, to say nothing of, by the same token, moreover, as well as, furthermore, therefore, top-notch, get ready, buckle up, switching gears, dive in, now let’s move on, in conclusion, demystifying, delve, ever-evolving, innovative solution, let’s dive in, let’s delve, folks, picturesque, unleash, dive in, voyage, picture this, say goodbye to, according to my database, treasure trove, let’s begin this journey, let’s delve, go deeper, explore now, navigating, delve into, shed light, gone are the days.
+
+                When writing, you may use these words as needed or any words similar to the following, but never in the first line of any paragraph: first, second, third, important, equally, identically, uniquely, together with, likewise, comparatively, correspondingly, similarly, additionally, explore, crucial, whimsical, embrace, freedom, essential, imperative, important, whilst, explore, discover, elevate, solace.
+
                 """,
             },
         ],

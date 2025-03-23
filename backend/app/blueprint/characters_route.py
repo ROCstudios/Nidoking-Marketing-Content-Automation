@@ -42,11 +42,9 @@ def get_characters():
 
 @characters_bp.route("/voices", methods=["GET"])
 def get_voices():
-    # ElevenLabs Voices endpoint (from https://elevenlabs.io/docs/api-reference/voices/get-all)
-    api_url = "https://api.elevenlabs.io/v1/voices"
-    headers = {
-        "xi-api-key": "sk_0ef25f337d445c0ef1250314a6322e3821ab006a0f84c933"  # Replace with your ElevenLabs API key
-    }
+    # RenderNet Voices endpoint
+    api_url = "https://api.rendernet.ai/pub/v1/voices"  # Replace with the actual RenderNet API URL
+    headers = {"X-API-KEY": "8yb3-iTJ3M4oHTtaCz1yDY6zEwNj-QQZzfBD8FJRPQc"}
 
     try:
         response = requests.get(api_url, headers=headers)
@@ -55,12 +53,12 @@ def get_voices():
         return jsonify({"error": "Failed to fetch voices", "details": str(e)}), 500
 
     voices_data = response.json()
-    voices = voices_data.get("voices", [])
+    voices = voices_data.get("data", [])
     clean_voices = [
         {
-            "voice_id": voice.get("voice_id"),
+            "voice_id": voice.get("name"),
             "name": voice.get("name"),
-            "sample_url": voice.get("preview_url"),
+            "sample_url": voice.get("demo"),
         }
         for voice in voices
     ]

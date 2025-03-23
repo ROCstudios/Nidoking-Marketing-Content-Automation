@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../common/NavBar";
 import config from "../config";
@@ -10,7 +10,8 @@ import UserStore from "../data/UserStore";
 
 const Bundle = () => {
   const navigate = useNavigate();
-  const { title, topic } = useLocation().state;
+  const location = useLocation();
+  const { title, topic, render_id, voice_id } = location.state || {};
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,19 +22,53 @@ const Bundle = () => {
     movie_script: "",
     audio_url: "",
   });
+  // Toast notification state
+  const [showToast, setShowToast] = useState(false);
 
+  // Display toast with user ID when component mounts
   useEffect(() => {
-    const response = axios.post(`${config.backendUrl}/content/text`, {
-      email: UserStore.getCurrentUser().email,
-      title: title,
-      topic: topic,
-    });
-    if (response.status === 201) {
-      setBundle(response.data);
-    } else {
-      setError("Failed to get authentication URL");
+    const userId = UserStore.getCurrentUser()?.email;
+    console.log("🚀 ~ userId:", userId);
+  }, []);
+
+  const fetchData = async () => {
+    if (!title || !topic || !render_id || !voice_id) {
+      navigate("/avatar");
+      return;
     }
-  }, [title, topic]);
+
+    try {
+      console.log("🚀 ~ fetchData ~ title:", title);
+      console.log("🚀 ~ fetchData ~ topic:", topic);
+      console.log("🚀 ~ fetchData ~ render_id:", render_id);
+      console.log("🚀 ~ fetchData ~ voice_id:", voice_id);
+      setLoading(true);
+      const response = await axios.post(`${config.backendUrl}/content/text`, {
+        email: UserStore.getCurrentUser().email,
+        title: title,
+        topic: topic,
+        render_id: render_id,
+        voice_id: voice_id,
+      });
+      if (response.status === 201) {
+        setBundle(response.data);
+      } else {
+        setError("Failed to get authentication URL");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching the bundle data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [title, topic, render_id, voice_id, navigate]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -42,6 +77,11 @@ const Bundle = () => {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content grid grid-cols-2 gap-8">
           <div className="max-w-lg">
+            <div className="flex justify-center mt-8">
+              <button className="btn btn-secondary" onClick={fetchData}>
+                Test Fetch Data
+              </button>
+            </div>
             <div className="card bg-base-100 w-96 h-[calc(24rem/9*16)] shadow-xl">
               <div className="card-body">
                 <h2 className="card-title">SEO Blog Post</h2>

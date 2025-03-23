@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../common/NavBar";
 import ErrorAlert from "../common/ErrorAlert";
 import config from "../config";
@@ -12,6 +12,7 @@ import sam from "../assets/sam.jpeg";
 import sara from "../assets/sara.jpeg";
 import tia from "../assets/tia.jpeg";
 import zoe from "../assets/zoe.jpeg";
+import UserStore from "../data/UserStore";
 
 // Create a mapping from avatar name to asset
 const avatarAssets = {
@@ -79,6 +80,8 @@ function VoiceSample({ voice, isSelected, onSelect }) {
 }
 
 function AvatarGallery() {
+  const { title, topic } = useLocation().state;
+
   const [avatars, setAvatars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -147,14 +150,22 @@ function AvatarGallery() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: "current_user_id", // Replace with actual user ID
+          user_id: UserStore.getCurrentUser()?.email,
           voice_id: selectedVoice.voice_id,
           render_id: selectedAvatar.id,
         }),
       });
 
       if (response.ok) {
-        navigate("/bundle");
+        navigate("/bundle", {
+          state: {
+            title,
+            topic,
+            render_id: selectedAvatar.id,
+            voice_id: selectedVoice.voice_id,
+            prompt: selectedAvatar.prompt,
+          },
+        });
       } else {
         const errorData = await response.json();
         console.error("Error submitting voice/render:", errorData);
@@ -251,15 +262,16 @@ function AvatarGallery() {
               </p>
             </div>
           )}
+
           <button
-            className="btn btn-primary mt-6"
+            className="btn btn-primary w-full max-w-lg"
             disabled={!selectedAvatar || !selectedVoice || isSubmitting}
             onClick={handleSubmit}
           >
             {isSubmitting ? (
               <span className="loading loading-spinner"></span>
             ) : (
-              "Next"
+              "Generate Content Bundle"
             )}
           </button>
         </div>

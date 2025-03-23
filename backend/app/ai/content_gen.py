@@ -2,39 +2,53 @@ from db.user_store import user_store
 from db.bundle_store import bundle_store
 from db.auth_store import auth_store
 from ai.ai_wrapper import *
-from ai.eleven_labs import generate_audio
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 async def generate_text_bundle(email, title, topic):
-    brand = await user_store.fetch_brand(email)
-    social_media_caption = generate_social_media_caption(
-        brand["avatar"], brand["painPoints"], brand["solution"], topic
-    )
-    seo_blog_post = generate_seo_blog_post(
-        brand["avatar"], brand["painPoints"], brand["solution"], topic
-    )
+    try:
+        brand = await user_store.fetch_brand(email)
+        if not brand:
+            raise ValueError("Brand data is missing or invalid.")
 
-    movie_script = generate_movie_script(social_media_caption, seo_blog_post)
-    movie_scenes = generate_movie_scenes(movie_script)
+        social_media_caption = generate_social_media_caption(
+            brand.get("avatar", ""),
+            brand.get("painPoints", ""),
+            brand.get("solution", ""),
+            topic,
+        )
+        seo_blog_post = generate_seo_blog_post(
+            brand.get("avatar", ""),
+            brand.get("painPoints", ""),
+            brand.get("solution", ""),
+            topic,
+        )
 
-    audio_url = generate_audio(movie_script)
+        movie_script = generate_movie_script(social_media_caption, seo_blog_post)
+        image_prompt = generate_image_prompt(social_media_caption)
+        image_url = generate_image(image_prompt)
 
-    image_prompt = generate_image_prompt(social_media_caption)
+        title = "".join(e for e in title if e.isalnum() or e.isspace()).strip()
 
-    image_url = generate_image(image_prompt)
+        bundle = {
+            "title": title,
+            "topic": topic,
+            "social_media_caption": social_media_caption,
+            "seo_blog_post": seo_blog_post,
+            "image": image_url,
+            "movie_script": movie_script,
+        }
 
-    title = "".join(e for e in title if e.isalnum() or e.isspace()).strip()
+        logging.info("🚀 ~ bundle: %s", bundle)
 
-    bundle = {
-        "title": title,
-        "topic": topic,
-        "social_media_caption": social_media_caption,
-        "seo_blog_post": seo_blog_post,
-        "image": image_url,
-        "movie_script": movie_script,
-        "movie_scenes": movie_scenes,
-        "audio_url": audio_url,
-    }
+        await bundle_store.save_bundle(email, title, bundle)
+        return bundle
 
-    await bundle_store.save_bundle(email, title, bundle)
-    return bundle
+    except Exception as e:
+        logging.error("Error generating text bundle: %s", str(e))
+        return None
